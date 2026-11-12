@@ -1,10 +1,12 @@
+
 require('dotenv').config();
 
 const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
-const app = express();
 const path = require('path');
-const PORT = 3000;
+
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Check environment variables
 if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SECRET_KEY) {
@@ -17,12 +19,10 @@ const supabase = createClient(
     process.env.SUPABASE_SECRET_KEY
 );
 
+// Serve frontend files
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-app.get('/', (req, res) => {
-    res.send('Welcome to My Drive Backend!');
-});
-
+// Server status
 app.get('/api/status', (req, res) => {
     res.json({
         server: 'Running',
@@ -30,7 +30,7 @@ app.get('/api/status', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
     console.log('Supabase client initialized successfully!');
 });
